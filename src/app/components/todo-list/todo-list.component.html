@@ -1,0 +1,88 @@
+<div class="list-container">
+  <div class="list-header">
+    <div class="header-content">
+      <h2 class="list-title">
+        <span class="list-icon">📋</span>
+        My Todo List
+      </h2>
+      <p class="list-subtitle">
+        {{ todos.length }} {{ todos.length === 1 ? 'task' : 'tasks' }} in your list
+      </p>
+    </div>
+    <a routerLink="/todos/new" class="add-btn">
+      <span class="add-icon">+</span>
+      Add New Todo
+    </a>
+  </div>
+
+  <div class="todos-grid" *ngIf="todos.length > 0; else noData">
+    <div 
+      *ngFor="let todo of todos; trackBy: trackByTodo" 
+      class="todo-card"
+      [class.completed]="todo.is_done"
+    >
+      <div class="todo-header">
+        <div class="todo-status">
+          <span 
+            class="status-indicator"
+            [class.completed]="todo.is_done"
+            (click)="toggleStatus(todo)"
+            title="{{ todo.is_done ? 'Mark as pending' : 'Mark as completed' }}"
+          >
+            {{ todo.is_done ? '✓' : '○' }}
+          </span>
+        </div>
+        <div class="todo-actions">
+          <button 
+            class="action-btn edit-btn" 
+            [routerLink]="['/todos', todo.id, 'edit']"
+            title="Edit todo"
+          >
+            <span class="action-icon">✏️</span>
+          </button>
+          <button 
+            class="action-btn delete-btn" 
+            (click)="deleteTodo(todo.id)"
+            title="Delete todo"
+          >
+            <span class="action-icon">🗑️</span>
+          </button>
+        </div>
+      </div>
+      
+      <div class="todo-content">
+        <h3 class="todo-title" [class.completed-text]="todo.is_done">
+          {{ todo.title }}
+        </h3>
+        <p class="todo-description" [class.completed-text]="todo.is_done">
+          {{ todo.description }}
+        </p>
+      </div>
+      
+      <div class="todo-footer">
+         <span class="todo-date"> 
+           <span class="date-icon">📅</span>
+            {{ todo.created_at | date:'mediumDate' }}
+        </span> 
+        <span class="todo-priority" [class.high]="!todo.is_done">
+          {{ todo.is_done ? 'Completed' : 'Pending' }}
+        </span>
+      </div> 
+    </div>
+  </div>
+
+  <ng-template #noData>
+    <div class="empty-state">
+      <div class="empty-icon">📝</div>
+      <h3 class="empty-title">No todos yet!</h3>
+      <p class="empty-description">
+        Start organizing your tasks by creating your first todo.
+      </p>
+      <a routerLink="/todos/new" class="empty-action-btn">
+        <span class="action-icon">+</span>
+        Create Your First Todo
+      </a>
+    </div>
+  </ng-template>
+</div>
+
